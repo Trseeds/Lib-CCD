@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <windows.h>
 
 char Buffer[128] = "The buffer has not been overwritten.";
@@ -214,4 +213,5 @@ void CDCloseTray()
 {
     SendCommand("set cd door closed");
 }
+
 
