@@ -43,6 +43,11 @@ char* CDGetReturnPointer()
     return(Buffer);
 }
 
+void CDClearBuffer()
+{
+    sprintf(Buffer,"The buffer has not been overwritten.");
+}
+
 void CDGetStatus()
 {
     SendCommand("status cd mode");
@@ -153,7 +158,7 @@ void CDExit() //Usually unecessary as Windows will automatically close the MCI a
 void CDPlay(int From, int To)
 {
     int NumberOfTracks = CDGetNumberOfTracks();
-    int TrackPositions[CDGetNumberOfTracks()];
+    int TrackPositions[NumberOfTracks];
     char Command[32];
     CDGetTrackPositions(TrackPositions);
     if(From == -1)
@@ -189,6 +194,44 @@ int CDStop()
     int CurrentTime = CDGetCurrentTime();
     SendCommand("stop cd");
     return(CurrentTime);
+}
+
+void CDPrevious(int To)
+{
+    int NumberOfTracks = CDGetNumberOfTracks();
+    int TrackPositions[NumberOfTracks];
+    CDGetTrackPositions(TrackPositions);
+    int CurrentTrack = CDGetCurrentTrack();
+    int CurrentTrackTime = CDGetCurrentTrackTime();
+    if (CurrentTrack == 1) //Out of bounds.
+    {
+        CDStop();
+        CDPlay(TrackPositions[0],To);
+    }
+    if (CurrentTrackTime < 375) //375 frames is 5 seconds
+    {
+        CDStop();
+        CDPlay(TrackPositions[CurrentTrack-2],To);
+    }
+    else
+    {
+        CDStop();
+        CDPlay(TrackPositions[CurrentTrack-1],To);
+    }
+}
+
+void CDNext(int To)
+{
+    int NumberOfTracks = CDGetNumberOfTracks();
+    int TrackPositions[NumberOfTracks];
+    CDGetTrackPositions(TrackPositions);
+    int CurrentTrack = CDGetCurrentTrack();
+    if (CurrentTrack == NumberOfTracks)
+    {
+        CDStop(); //Out of bounds.
+    }
+    CDStop();
+    CDPlay(TrackPositions[CurrentTrack],To); //TrackPositions is 0 indexed and CurrentTrack isn't, dont +1.
 }
 
 void CDSetVolume(int Volume) //0-1000, 

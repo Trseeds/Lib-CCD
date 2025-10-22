@@ -5,14 +5,17 @@ As such, writing implementations for other systems may require great effort, as 
 MCI functions should work with little fuss in Linux under WINE.
 
 Q&A:
-    Q: Will I ever write for other operating sytems?
+    Q: Will I ever write for other operating systems?
     A: Probably not. This is a quick and dirty solution for my own project.
+    
+    Q: Why does everything return an integer timestamp as a count of frames instead of a readable MSF timestamp?
+    A: Integers are easier to work with and faster in C. A Frames to MSF conversion function is included for convenience.
 
-    Q: Why does everything return an intger timestamp as a count of frames instead of a readable MSF timestamp?
-    A: Integers are easier to work with and faster in C. A Frames to MSF conversion function is included for convinience.
-
-    Q: Will this recieve long term support and or updates?
+    Q: Will this receive long term support and or updates?
     A: No.
+
+    Q: Who is asking these questions?
+    A: Me.
 
 Known quirks:
     Windows:
@@ -91,10 +94,19 @@ CDResume():
 CDStop():
     Queries MCI to stop playback.
     Returns the time playback was stopped at as a frame.
+CDPrevious():
+    One integer as input. Integer is the same 'To' that is passed into CDPlay()
+    If playback is less than 5 seconds into the track, seeks to the beginning of the previous track.
+    If playback is more than 5 seconds into the track, seeks to the beginning of the track.
+    If playback is on the first track, seeks to the beginning of the first track.
+CDNext():
+    One integer as input. Integer is the same 'To' that is passed into CDPlay()
+    Seeks to the beginning of the next track.
+    If playback is on the last track, stops playback.
 CDSetVolume():
     Queries MCI to change the volume of the alias.
     One integer as input. Value expected to be from 0-1000. (0.0%-100.0%)
-    This function is unusuable on most systems due to how Windows audio is structured.
+    This function does not work correctly on most systems due to how Windows audio is structured.
 CDOpenTray():
     Queries MCI to open the physical tray of the alias's drive.
 CDCloseTray():

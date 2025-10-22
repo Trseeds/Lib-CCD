@@ -8,7 +8,8 @@
 int CDTimeStampToFrames(char* TimeStamp);
 void CDFramesToTimeStamp(int Frames, char* TimeStamp);
 //Info
-char* CDGetReturnPointer(); //Returns pointer to the buffer where CD commands write errors to.
+char* CDGetReturnPointer(); //Returns pointer to the buffer where CD commands write to.
+void CDClearBuffer(); //Erases the contents of the buffer, use if getting unexpected returns.
 void CDGetStatus();
 int CDDiscCheck(); //1 if disc is present, 0 otherwise.
 int CDGetNumberOfTracks();
@@ -28,6 +29,8 @@ void CDPlay(int From, int To); //From and to are frames, pass -1 for either valu
 int CDPause(); //Returns time paused at.
 void CDResume();
 int CDStop(); //Returns time stopped at.
+void CDPrevious(int To); //Plays previous track if less than 5 seconds in, otherwise seeks to beginning of the current track.
+void CDNext(int To); //Plays the next track.
 void CDSetVolume(int Volume);
 //Physical
 void CDOpenTray(); //Opens CD tray if supported. (almost always supported)
