@@ -21,6 +21,7 @@ Known quirks:
     Windows:
         Volume control does not work.
         Do not always need to use CDExit() as Windows will usually close the connection once the program that opened it is closed.
+        Pausing and resuming rewinds a short amount of time then jumps back.
 
 To compile:
     Windows:
@@ -89,6 +90,7 @@ CDPlay():
 CDPause():
     Queries MCI to pause playback.
     Returns the time playback was paused at as a frame.
+    Not recommended, stop and play instead.
 CDResume():
     Queries MCI to resume playback, only works if previously paused and alias remains open.
 CDStop():
@@ -108,6 +110,6 @@ CDSetVolume():
     One integer as input. Value expected to be from 0-1000. (0.0%-100.0%)
     This function does not work correctly on most systems due to how Windows audio is structured.
 CDOpenTray():
-    Queries MCI to open the physical tray of the alias's drive.
+    Queries MCI to open the tray of the alias's drive.
 CDCloseTray():
-    Queries MCI to close the physical tray of the alias's drive.
+    Queries MCI to close the tray of the alias's drive.
