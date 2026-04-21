@@ -158,6 +158,7 @@ void CDExit() //Usually unecessary as Windows will automatically close the MCI a
 void CDPlay(int From, int To)
 {
     int NumberOfTracks = CDGetNumberOfTracks();
+    int Runtime = CDGetRunTime();
     int TrackPositions[NumberOfTracks];
     char Command[32];
     CDGetTrackPositions(TrackPositions);
@@ -167,7 +168,7 @@ void CDPlay(int From, int To)
     }
     if(To == -1)
     {
-        To = TrackPositions[NumberOfTracks - 1];
+        To = Runtime;
     }
     char FromTimeStamp[9];
     char ToTimeStamp[9];
@@ -203,12 +204,17 @@ void CDPrevious(int To)
     CDGetTrackPositions(TrackPositions);
     int CurrentTrack = CDGetCurrentTrack();
     int CurrentTrackTime = CDGetCurrentTrackTime();
-    if (CurrentTrack == 1) //Out of bounds.
+    if (CurrentTrack == 1 && (CurrentTrackTime < 375)) //Out of bounds.
+    {
+        CDStop();
+        CDPlay(TrackPositions[NumberOfTracks-1],To);
+    }
+    else if(CurrentTrack == 1)
     {
         CDStop();
         CDPlay(TrackPositions[0],To);
     }
-    if (CurrentTrackTime < 375) //375 frames is 5 seconds
+    else if (CurrentTrackTime < 375) //375 frames is 5 seconds
     {
         CDStop();
         CDPlay(TrackPositions[CurrentTrack-2],To);
@@ -228,7 +234,7 @@ void CDNext(int To)
     int CurrentTrack = CDGetCurrentTrack();
     if (CurrentTrack == NumberOfTracks)
     {
-        CDStop(); //Out of bounds.
+        CurrentTrack = 0;
     }
     CDStop();
     CDPlay(TrackPositions[CurrentTrack],To); //TrackPositions is 0 indexed and CurrentTrack isn't, dont +1.
